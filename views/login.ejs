@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Formulário de Cadastro</title>
+
+    <!-- LINK CSS -->
+    <link rel="stylesheet" href="./static/styles/styles.css" />
+
+    <!-- LINK JAVASCRIPT -->
+    <!-- <script src="./static/scripts/validaCadastro.js" defer></script> -->
+  </head>
+  <body>
+    <div class="container_rain">
+      <span class="cloud"></span>
+      <span class="cloud"></span>
+      <span class="cloud"></span>
+      <span class="sun"></span>
+    </div>
+
+    <section class="container">
+      <div class="imagem_container">
+        <h1>Bem-vindo</h1>
+        <p>
+          Compartilhe suas aventuras e <br />
+          descubra novos lugares ao redor do mundo!
+        </p>
+      </div>
+      <form id="cadastroForm" action="/login" method="post">
+        <div class="title">
+          <h1>Login</h1>
+          <p>Preencha os campos abaixo e entre na nossa comunidade.</p>
+        </div>
+
+        <div class="input_data">
+          <input type="text" id="nome" name="username" required />
+          <label>Nome</label>
+        </div>
+
+        <!-- <div class="input_data">
+          <input type="email" id="email" required />
+          <label>Email</label>
+        </div> -->
+
+        <div class="input_data">
+          <input type="password" id="senha" name="password" required />
+          <label>Senha</label>
+        </div>
+
+        <!-- <div class="input_data">
+          <input type="password" id="confirmarSenha" required />
+          <label>Confirmar Senha</label>
+        </div> -->
+
+        <!-- <div class="input_data">
+          <input type="tel" id="celular" maxlength="15" required />
+          <label>Celular</label>
+        </div>
+
+        <div class="input_data">
+          <input type="text" id="cpf" required />
+          <label>CPF</label>
+        </div>
+
+        <div class="input_data">
+          <input type="text" id="rg" required />
+          <label>RG</label>
+        </div> -->
+
+        <div class="btnArea">
+          <p class="msgError"></p>
+          <button id="btnSubmit" type="submit">Enviar</button>
+        </div>
+      </form>
+    </section>
+  </body>
+</html>
