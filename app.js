@@ -69,11 +69,12 @@ app.get("/cadastro", (req, res) => {
 });
 
 app.post("/cadastro", (req, res) => {
+  // Linha para depurar se esta vindo dados no req.body
   !req.body
     ? console.log(`Body vazio: ${req.body}`)
     : console.log(JSON.stringify(req.body));
 
-    // Colocar aqui as validações e inclusão no banco de dados do cadastro do usuário
+  // Colocar aqui as validações e inclusão no banco de dados do cadastro do usuário
     
   res.send(
     `Bem-vindo usuário: ${req.body.username}, seu email é ${req.body.email}`
