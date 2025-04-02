@@ -64,11 +64,38 @@ app.post("/cadastro", (req, res) => {
     ? console.log(`Body vazio: ${req.body}`)
     : console.log(JSON.stringify(req.body));
 
+  const { username, password, email, celular, cpf, rg } = req.body;
   // Colocar aqui as validações e inclusão no banco de dados do cadastro do usuário
+  // 1. Validar dados do usuário
+  // 2. saber se ele já existe no banco
+  const query =
+    "SELECT * FROM users WHERE email=? OR cpf=? OR rg=? OR username=?";
+  db.get(query, [email, cpf, rg, username], (err, row) => {
+    if (err) throw err;
+    console.log(`${JSON.stringify(row)}`);
+    if (row) {
+      // A variável 'row' irá retornar os dados do banco de dados,
+      // executado através do SQL, variável query
+      res.send("Usuário já cadastrado, refaça o cadastro");
+    } else {
+      // 3. Se usuário não existe no banco cadastrar
+      const insertQuery =
+        "INSERT INTO users (username, password, email, celular, cpf, rg) VALUES (?,?,?,?,?,?)";
+      db.run(
+        insertQuery,
+        [username, password, email, celular, cpf, rg],
+        (err) => {
+          // Inserir a lógica do INSERT
+          if (err) throw err;
+          res.send("Usuário cadastrado, com sucesso");
+        }
+      );
+    }
+  });
 
-  res.send(
-    `Bem-vindo usuário: ${req.body.username}, seu email é ${req.body.email}`
-  );
+  // res.send(
+  //   `Bem-vindo usuário: ${req.body.username}, seu email é ${req.body.email}`
+  // );
 });
 
 // Pregramação de rotas do método GET do HTTP 'app.get()'
