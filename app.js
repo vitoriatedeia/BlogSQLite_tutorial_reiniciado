@@ -2,7 +2,7 @@ const express = require("express"); // importa lib do Express
 const sqlite3 = require("sqlite3"); // Importa lib do sqlite3
 const bodyParser = require("body-parser"); // Importa o body-parser
 
-const PORT = 8000; // Porta TCP do servidor HTTP da aplicação
+const PORT = 9000; // Porta TCP do servidor HTTP da aplicação
 
 const app = express(); // Instância para uso do Express
 
@@ -33,7 +33,7 @@ app.set("view engine", "ejs");
 
 const index =
   "<a href='/sobre'> Sobre </a><a href='/login'> Login </a><a href='/cadastro'> Cadastrar </a>";
-const sobre = 'Vc está na página "Sobre"<br><a href="/">Voltar</a>';
+const sobre = "sobre";
 const login = 'Vc está na página "Login"<br><a href="/">Voltar</a>';
 const cadastro = 'Vc está na página "Cadastro"<br><a href="/">Voltar</a>';
 
@@ -44,41 +44,49 @@ const cadastro = 'Vc está na página "Cadastro"<br><a href="/">Voltar</a>';
 app.get("/", (req, res) => {
   // Rota raiz do meu servidor, acesse o browser com o endereço http://localhost:8000/
   // res.send(index);
+  console.log("GET /index");
   res.render("index");
+  // res.redirect("/cadastro"); // Redireciona para a ROTA cadastro
 });
 
-// Pregramação de rotas do método GET do HTTP 'app.get()'
-app.get("/sobre", (req, res) => {
-  // Rota raiz do meu servidor, acesse o browser com o endereço http://localhost:8000/sobre
-  res.send(sobre);
-});
-
-app.get("/login", (req, res) => {
-  // Rota raiz do meu servidor, acesse o browser com o endereço http://localhost:8000/info
-  res.render("login");
-});
-
-app.post("/login", (req, res) => {
-  res.send("Login ainda não implementado.");
-});
-
+// GET Cadastro
 app.get("/cadastro", (req, res) => {
+  console.log("GET /cadastro");
   // Rota raiz do meu servidor, acesse o browser com o endereço http://localhost:8000/cadastro
-  res.send(cadastro);
-  );
+  res.render("cadastro");
 });
 
+// POST do cadastro
 app.post("/cadastro", (req, res) => {
+  console.log("POST /cadastro");
   // Linha para depurar se esta vindo dados no req.body
   !req.body
     ? console.log(`Body vazio: ${req.body}`)
     : console.log(JSON.stringify(req.body));
 
   // Colocar aqui as validações e inclusão no banco de dados do cadastro do usuário
-    
+
   res.send(
     `Bem-vindo usuário: ${req.body.username}, seu email é ${req.body.email}`
   );
+});
+
+// Pregramação de rotas do método GET do HTTP 'app.get()'
+app.get("/sobre", (req, res) => {
+  console.log("GET /sobre");
+  // Rota raiz do meu servidor, acesse o browser com o endereço http://localhost:8000/sobre
+  res.render("sobre");
+});
+
+app.get("/login", (req, res) => {
+  console.log("GET /login");
+  // Rota raiz do meu servidor, acesse o browser com o endereço http://localhost:8000/info
+  res.render("login");
+});
+
+app.post("/login", (req, res) => {
+  console.log("POST /login");
+  res.send("Login ainda não implementado.");
 });
 
 // app.listen() deve ser o último comando da aplicação (app.js)
