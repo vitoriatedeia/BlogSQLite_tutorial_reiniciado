@@ -72,7 +72,7 @@ app.post("/cadastro", (req, res) => {
     "SELECT * FROM users WHERE email=? OR cpf=? OR rg=? OR username=?";
   db.get(query, [email, cpf, rg, username], (err, row) => {
     if (err) throw err;
-    console.log(`${JSON.stringify(row)}`);
+    console.log(`LINHA RETORNADA do SELECT USER: ${JSON.stringify(row)}`);
     if (row) {
       // A variável 'row' irá retornar os dados do banco de dados,
       // executado através do SQL, variável query
