@@ -45,7 +45,10 @@ app.get("/", (req, res) => {
   // Rota raiz do meu servidor, acesse o browser com o endereço http://localhost:8000/
   // res.send(index);
   console.log("GET /index");
-  res.render("index");
+  res.render("pages/index", {
+    titulo: "Blog da turma I2HNA - SESI Nova Odessa",
+    rodape: "",
+  });
   // res.redirect("/cadastro"); // Redireciona para a ROTA cadastro
 });
 
@@ -62,7 +65,7 @@ app.get("/usuarios", (req, res) => {
 app.get("/cadastro", (req, res) => {
   console.log("GET /cadastro");
   // Rota raiz do meu servidor, acesse o browser com o endereço http://localhost:8000/cadastro
-  res.render("cadastro");
+  res.render("pages/cadastro");
 });
 
 // POST do cadastro
@@ -111,18 +114,23 @@ app.post("/cadastro", (req, res) => {
 app.get("/sobre", (req, res) => {
   console.log("GET /sobre");
   // Rota raiz do meu servidor, acesse o browser com o endereço http://localhost:8000/sobre
-  res.render("sobre");
+  res.render("pages/sobre");
 });
 
 app.get("/login", (req, res) => {
   console.log("GET /login");
   // Rota raiz do meu servidor, acesse o browser com o endereço http://localhost:8000/info
-  res.render("login");
+  res.render("pages/login");
 });
 
 app.post("/login", (req, res) => {
   console.log("POST /login");
   res.send("Login ainda não implementado.");
+});
+
+app.get("/dashboard", (req, res) => {
+  console.log("GET /dashboard");
+  res.render("pages/dashboard");
 });
 
 // app.listen() deve ser o último comando da aplicação (app.js)
