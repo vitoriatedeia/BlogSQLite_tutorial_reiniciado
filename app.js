@@ -4,6 +4,9 @@ const bodyParser = require("body-parser"); // Importa o body-parser
 
 const PORT = 9000; // Porta TCP do servidor HTTP da aplicação
 
+// Variáveis usadas no EJS (padrão)
+let config = { titulo: "", rodape: "" };
+
 const app = express(); // Instância para uso do Express
 
 // Cria conexão com obanco de dados
@@ -45,10 +48,10 @@ app.get("/", (req, res) => {
   // Rota raiz do meu servidor, acesse o browser com o endereço http://localhost:8000/
   // res.send(index);
   console.log("GET /index");
-  res.render("pages/index", {
-    titulo: "Blog da turma I2HNA - SESI Nova Odessa",
-    rodape: "",
-  });
+
+  config = { titulo: "Blog da turma I2HNA - SESI Nova Odessa", rodape: "" };
+  // config.rodape = "1";
+  res.render("pages/index", config);
   // res.redirect("/cadastro"); // Redireciona para a ROTA cadastro
 });
 
@@ -57,7 +60,7 @@ app.get("/usuarios", (req, res) => {
   db.all(query, (err, row) => {
     console.log(`GET /usuarios ${JSON.stringify(row)}`);
     // res.send("Lista de usuários.");
-    res.render("usertable");
+    res.render("partials/usertable", config);
   });
 });
 
@@ -65,7 +68,7 @@ app.get("/usuarios", (req, res) => {
 app.get("/cadastro", (req, res) => {
   console.log("GET /cadastro");
   // Rota raiz do meu servidor, acesse o browser com o endereço http://localhost:8000/cadastro
-  res.render("pages/cadastro");
+  res.render("pages/cadastro", config);
 });
 
 // POST do cadastro
@@ -114,13 +117,13 @@ app.post("/cadastro", (req, res) => {
 app.get("/sobre", (req, res) => {
   console.log("GET /sobre");
   // Rota raiz do meu servidor, acesse o browser com o endereço http://localhost:8000/sobre
-  res.render("pages/sobre");
+  res.render("pages/sobre", config);
 });
 
 app.get("/login", (req, res) => {
   console.log("GET /login");
   // Rota raiz do meu servidor, acesse o browser com o endereço http://localhost:8000/info
-  res.render("pages/login");
+  res.render("pages/login", config);
 });
 
 app.post("/login", (req, res) => {
@@ -130,7 +133,7 @@ app.post("/login", (req, res) => {
 
 app.get("/dashboard", (req, res) => {
   console.log("GET /dashboard");
-  res.render("pages/dashboard");
+  res.render("pages/dashboard", config);
 });
 
 // app.listen() deve ser o último comando da aplicação (app.js)
