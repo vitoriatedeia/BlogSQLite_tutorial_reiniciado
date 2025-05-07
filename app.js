@@ -59,7 +59,12 @@ app.get("/", (req, res) => {
   // res.send(index);
   console.log("GET /index");
 
-  config = { titulo: "Blog da turma I2HNA - SESI Nova Odessa", rodape: "" };
+  config = {
+    titulo: "Blog da turma I2HNA - SESI Nova Odessa",
+    rodape: "",
+    dados: [],
+  };
+
   // config.rodape = "1";
   res.render("pages/index", config);
   // res.redirect("/cadastro"); // Redireciona para a ROTA cadastro
@@ -70,6 +75,14 @@ app.get("/usuarios", (req, res) => {
   db.all(query, (err, row) => {
     console.log(`GET /usuarios ${JSON.stringify(row)}`);
     // res.send("Lista de usuários.");
+
+    config.dados = [
+      { username: "User 1", email: "x1@x.com", celular: "(19) 99999-9999" },
+      { username: "User 2", email: "x2@x.com", celular: "(20) 99999-9999" },
+      { username: "User 3", email: "x3@x.com", celular: "(21) 99999-9999" },
+      { username: "User 4", email: "x4@x.com", celular: "(22) 99999-9999" },
+    ];
+    console.log(JSON.stringify(config.dados));
     res.render("partials/usertable", config);
   });
 });
@@ -159,6 +172,7 @@ app.post("/login", (req, res) => {
 
 app.get("/dashboard", (req, res) => {
   console.log("GET /dashboard");
+  console.log(JSON.stringify(config));
   res.render("pages/dashboard", config);
 });
 
