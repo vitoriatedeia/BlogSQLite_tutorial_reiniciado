@@ -84,6 +84,29 @@ footer p {
   background-color: transparent;
 }
 
+table {
+  /* font-size: 24px; */
+  width: 100vh;
+}
+
+tr,
+td,
+thead,
+th,
+tfoot {
+  border: 1px solid black;
+  border-bottom: 3px solid #34554c;
+  background-color: #689b63;
+  text-align: center;
+  padding: 5px;
+  overflow: auto;
+}
+
+th {
+  background-color: rgba(80, 80, 68, 0.347);
+  font-style: italic;
+}
+
 .cloud {
   position: absolute;
   width: 250px;
@@ -277,8 +300,8 @@ footer p {
   color: #0f2a1d;
 }
 
-#cadastroForm .input_data input:focus + label,
-#cadastroForm .input_data input:valid + label {
+#cadastroForm .input_data input:focus+label,
+#cadastroForm .input_data input:valid+label {
   top: -10%;
   left: 0;
 }

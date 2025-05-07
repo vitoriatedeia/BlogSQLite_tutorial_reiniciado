@@ -1,7 +1,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title><%= titulo %></title>
+  <title><%- titulo && req.session.loggedin ? req.session.username.toUpperCase()+ '@' + titulo  : titulo %></title>
 
   <!-- LINK PARA CSS EXTERNO -->
   <link rel="stylesheet" href="/static/styles/styles.css" />

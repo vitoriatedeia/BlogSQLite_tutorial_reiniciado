@@ -6,7 +6,14 @@ const session = require("express-session"); // Importa 0 express-session
 const PORT = 9000; // Porta TCP do servidor HTTP da aplicação
 
 // Variáveis usadas no EJS (padrão)
-let config = { titulo: "", rodape: "" };
+let config = { titulo: "", rodape: "", dados: [] };
+
+// config.dados = [
+//   { username: "User 1", email: "x1@x.com", celular: "(19) 99999-9999" },
+//   { username: "User 2", email: "x2@x.com", celular: "(20) 99999-9999" },
+//   { username: "User 3", email: "x3@x.com", celular: "(21) 99999-9999" },
+//   { username: "User 4", email: "x4@x.com", celular: "(22) 99999-9999" },
+// ];
 
 const app = express(); // Instância para uso do Express
 
@@ -44,6 +51,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Configurar EJS como o motor de visualização
 app.set("view engine", "ejs");
 
+
 const index =
   "<a href='/sobre'> Sobre </a><a href='/login'> Login </a><a href='/cadastro'> Cadastrar </a>";
 const sobre = "sobre";
@@ -57,33 +65,28 @@ const cadastro = 'Vc está na página "Cadastro"<br><a href="/">Voltar</a>';
 app.get("/", (req, res) => {
   // Rota raiz do meu servidor, acesse o browser com o endereço http://localhost:8000/
   // res.send(index);
-  console.log("GET /index");
+  console.log(`GET /index`);
 
   config = {
     titulo: "Blog da turma I2HNA - SESI Nova Odessa",
     rodape: "",
-    dados: [],
   };
 
   // config.rodape = "1";
-  res.render("pages/index", config);
+  res.render("pages/index", { titulo: config.titulo, req: req });
   // res.redirect("/cadastro"); // Redireciona para a ROTA cadastro
 });
 
 app.get("/usuarios", (req, res) => {
   const query = "SELECT * FROM users";
   db.all(query, (err, row) => {
+    if (err) throw err;
+
     console.log(`GET /usuarios ${JSON.stringify(row)}`);
     // res.send("Lista de usuários.");
-
-    config.dados = [
-      { username: "User 1", email: "x1@x.com", celular: "(19) 99999-9999" },
-      { username: "User 2", email: "x2@x.com", celular: "(20) 99999-9999" },
-      { username: "User 3", email: "x3@x.com", celular: "(21) 99999-9999" },
-      { username: "User 4", email: "x4@x.com", celular: "(22) 99999-9999" },
-    ];
-    console.log(JSON.stringify(config.dados));
-    res.render("partials/usertable", config);
+    // config.dados = row;
+    // console.log(JSON.stringify(config.dados));
+    res.render("partials/usertable", { titulo: "USUÁRIOS", dados: row, req: req });
   });
 });
 
@@ -91,7 +94,7 @@ app.get("/usuarios", (req, res) => {
 app.get("/cadastro", (req, res) => {
   console.log("GET /cadastro");
   // Rota raiz do meu servidor, acesse o browser com o endereço http://localhost:8000/cadastro
-  res.render("pages/cadastro", config);
+  res.render("pages/cadastro", { titulo: "CADASTRO", req: req });
 });
 
 // POST do cadastro
@@ -107,8 +110,11 @@ app.post("/cadastro", (req, res) => {
   // 1. Validar dados do usuário
   // 2. saber se ele já existe no banco
   const query =
-    "SELECT * FROM users WHERE email=? OR cpf=? OR rg=? OR username=?";
-  db.get(query, [email, cpf, rg, username], (err, row) => {
+    // "SELECT * FROM users WHERE email=? OR cpf=? OR rg=? OR username=?";
+    "SELECT * FROM users WHERE username=?";
+
+  // db.get(query, [email, cpf, rg, username], (err, row) => {
+  db.get(query, [username], (err, row) => {
     if (err) throw err;
     console.log(`LINHA RETORNADA do SELECT USER: ${JSON.stringify(row)}`);
     if (row) {
@@ -140,13 +146,20 @@ app.post("/cadastro", (req, res) => {
 app.get("/sobre", (req, res) => {
   console.log("GET /sobre");
   // Rota raiz do meu servidor, acesse o browser com o endereço http://localhost:8000/sobre
-  res.render("pages/sobre", config);
+  res.render("pages/sobre", { titulo: "SOBRE", req: req });
+});
+
+app.get("/logout", (req, res) => {
+  // Exemplo de uma rota (END POINT) controlado pela sessão do usuário logado.
+  req.session.destroy(() => {
+    res.redirect("/");
+  });
 });
 
 app.get("/login", (req, res) => {
   console.log("GET /login");
   // Rota raiz do meu servidor, acesse o browser com o endereço http://localhost:8000/info
-  res.render("pages/login", config);
+  res.render("pages/login", { titulo: "LOGIN", req: req });
 });
 
 app.post("/login", (req, res) => {
@@ -170,10 +183,23 @@ app.post("/login", (req, res) => {
   });
 });
 
+// app.get("/teste", (res, req) => {
+//   res.redirect("/usuarios")
+// });
+
 app.get("/dashboard", (req, res) => {
   console.log("GET /dashboard");
   console.log(JSON.stringify(config));
-  res.render("pages/dashboard", config);
+
+  if (req.session.loggedin) {
+    db.all("SELECT * FROM users", [], (err, row) => {
+      if (err) throw err;
+      res.render("pages/dashboard", { titulo: "DASHBOARD", dados: row, req: req });
+    });
+  } else {
+    console.log("Tentativa de acesso a àrea restrita");
+    res.redirect("/");
+  }
 });
 
 // app.listen() deve ser o último comando da aplicação (app.js)
