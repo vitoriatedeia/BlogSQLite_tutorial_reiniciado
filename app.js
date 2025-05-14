@@ -58,6 +58,7 @@ const sobre = "sobre";
 const login = 'Vc está na página "Login"<br><a href="/">Voltar</a>';
 const cadastro = 'Vc está na página "Cadastro"<br><a href="/">Voltar</a>';
 
+
 /* Método express.get necessita de dois parâmetros 
  Na ARROW FUNCTION, o primeiro são os dados do servidor (REQUISITION - 'req')
  o segundo, são os dados que serão enviados ao cliente (RESULT - 'res') */
@@ -73,7 +74,9 @@ app.get("/", (req, res) => {
   };
 
   // config.rodape = "1";
-  res.render("pages/index", { titulo: config.titulo, req: req });
+  // res.render("pages/index", { titulo: config.titulo, req: req });
+  // console.log({ ...config, req: req });
+  res.render("pages/index", { ...config, req: req });
   // res.redirect("/cadastro"); // Redireciona para a ROTA cadastro
 });
 
@@ -86,7 +89,7 @@ app.get("/usuarios", (req, res) => {
     // res.send("Lista de usuários.");
     // config.dados = row;
     // console.log(JSON.stringify(config.dados));
-    res.render("partials/usertable", { titulo: "USUÁRIOS", dados: row, req: req });
+    res.render("partials/usertable", { ...config, dados: row, req: req });
   });
 });
 
@@ -136,10 +139,6 @@ app.post("/cadastro", (req, res) => {
       );
     }
   });
-
-  // res.send(
-  //   `Bem-vindo usuário: ${req.body.username}, seu email é ${req.body.email}`
-  // );
 });
 
 // Pregramação de rotas do método GET do HTTP 'app.get()'
@@ -150,6 +149,7 @@ app.get("/sobre", (req, res) => {
 });
 
 app.get("/logout", (req, res) => {
+  console.log("GET /logout")
   // Exemplo de uma rota (END POINT) controlado pela sessão do usuário logado.
   req.session.destroy(() => {
     res.redirect("/");
@@ -183,10 +183,6 @@ app.post("/login", (req, res) => {
   });
 });
 
-// app.get("/teste", (res, req) => {
-//   res.redirect("/usuarios")
-// });
-
 app.get("/dashboard", (req, res) => {
   console.log("GET /dashboard");
   console.log(JSON.stringify(config));
@@ -200,6 +196,12 @@ app.get("/dashboard", (req, res) => {
     console.log("Tentativa de acesso a àrea restrita");
     res.redirect("/");
   }
+});
+
+app.use('*', (req, res) => {
+  // Envia uma resposta de erro 404
+
+  res.status(404).render('pages/404', { titulo: "ERRO 404", req: req });
 });
 
 // app.listen() deve ser o último comando da aplicação (app.js)
