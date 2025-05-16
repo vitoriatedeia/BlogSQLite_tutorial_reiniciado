@@ -123,7 +123,7 @@ app.post("/cadastro", (req, res) => {
     if (row) {
       // A variável 'row' irá retornar os dados do banco de dados,
       // executado através do SQL, variável query
-      res.send("Usuário já cadastrado, refaça o cadastro");
+      res.redirect("/register_failed");
     } else {
       // 3. Se usuário não existe no banco cadastrar
       const insertQuery =
@@ -134,7 +134,7 @@ app.post("/cadastro", (req, res) => {
         (err) => {
           // Inserir a lógica do INSERT
           if (err) throw err;
-          res.send("Usuário cadastrado, com sucesso");
+          res.redirect("/login");
         }
       );
     }
@@ -162,6 +162,16 @@ app.get("/login", (req, res) => {
   res.render("pages/login", { titulo: "LOGIN", req: req });
 });
 
+app.get("/register_failed", (req, res) => {
+  console.log("GET /register_failed");
+  res.render("pages/fail", { ...config, req: req, msg: "<a href='/cadastro'>Cadastro inválido</a>" });
+});
+
+app.get("/invalid_login", (req, res) => {
+  console.log("GET /invalid_login");
+  res.render("pages/fail", { ...config, req: req, msg: "Usuário e senha inválida!!!" });
+});
+
 app.post("/login", (req, res) => {
   console.log("POST /login");
   const { username, password } = req.body;
@@ -178,13 +188,13 @@ app.post("/login", (req, res) => {
       res.redirect("/dashboard");
     } // Se não, envia mensagem de erro (Usuário inválido)
     else {
-      res.send("Usuário inválido.");
+      res.redirect("/invalid_login");
     }
   });
 });
 
 app.get("/dashboard", (req, res) => {
-  console.log("GET /dashboard");
+  console.log("GET /dashboard", req.status);
   console.log(JSON.stringify(config));
 
   if (req.session.loggedin) {
@@ -200,8 +210,7 @@ app.get("/dashboard", (req, res) => {
 
 app.use('*', (req, res) => {
   // Envia uma resposta de erro 404
-
-  res.status(404).render('pages/404', { titulo: "ERRO 404", req: req });
+  res.status(404).render('pages/fail', { titulo: "ERRO 404", req: req, msg: "404" });
 });
 
 // app.listen() deve ser o último comando da aplicação (app.js)
