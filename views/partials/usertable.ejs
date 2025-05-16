@@ -11,20 +11,24 @@
     </tr>
   </thead>
   <tbody>
-    <% let index=1; dados.forEach(user => { %>
-    <tr <%- req.session.username==user.username ? `style="color: white; font-style: bold;"` : `` %>>
-      <td><%= user.id %></td>
-      <td><%= user.username %></td>
-      <td><%= user.email %></td>
-      <td><%= user.celular %></td>
-      <td><%= user.password %></td>
+    <%# let index=1; dados.forEach(user => { %>
+    <!-- <tr <%#- req.session.username==user.username ? `style="color: white; font-style: bold;"` : `` %>> -->
+
+    <% for(let i=0; i<dados.length; i++) { %>
+    <tr <%= req.session.username==dados[i].username ? `style="color: white; font-style: bold;"` : `` %>>
+      <td><%= dados[i].id %></td>
+      <td><%= dados[i].username %></td>
+      <td><%= dados[i].email %></td>
+      <td><%= dados[i].celular %></td>
+      <td><%= dados[i].password %></td>
     </tr>
-    <% index++; }); %>
+    <% } %>
+    <%# index++; }); %>
   </tbody>
   <tfoot>
     <tr>
-      <th colspan="5" style="font-size: 16px;"><%= `Usuários registrados: ${index-1}` %></th>
-    </tr>
+      <th colspan="5" style="font-size: 16px;"><%= `Usuários registrados: ${dados.length}` %></th>
+    </tr>+
   </tfoot>
 </table>
 <% } else { %>
