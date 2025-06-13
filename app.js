@@ -50,6 +50,7 @@ app.use(express.json());
 
 // Middleware para processar as requisições do Body Parameters do cliente
 // app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));
 
 // Configurar EJS como o motor de visualização
 app.set("view engine", "ejs");
@@ -112,6 +113,8 @@ app.post("/cadastro", (req, res) => {
       .json({ sucess: false, message: "Nenhum dado recebido." });
   }
 
+  console.log("Corpo da requisição:", JSON.stringify(!req.body, null, 2));
+
   const { username, password, email, celular, cpf, rg } = req.body;
   // Colocar aqui as validações e inclusão no banco de dados do cadastro do usuário
   // 1. Validar dados do usuário
@@ -170,8 +173,15 @@ app.post("/cadastro", (req, res) => {
           console.error("erro ao inserir usuário no banco:", err.message);
           return res.status(500).json({
             sucess: false,
+            message: "Erro interno do servidor ao cadastrar usuário.",
           });
         }
+        console.log(`Usuário ${username} cadastrado com ID: ${this.lastID}`);
+        return res.status(201).json({
+          sucess: true,
+          message: "Usuário cadastrado com sucesso!",
+          userId: this.lastID,
+        });
       }
     );
   }

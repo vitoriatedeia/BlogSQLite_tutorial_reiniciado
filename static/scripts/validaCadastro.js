@@ -28,35 +28,40 @@ const checkNome = () => {
 /* --------------------------------------------------------------------- */
 
 /* ---------- FUNÇÃO PARA VERIFICAR O EMAIL --------------------- */
-const checkEmail = (email) => {
-  const partesEmail = email.split("@");
-
-  if (
-    (partesEmail.length === 2 &&
-      partesEmail[1].toLowerCase() === "gmail.com") ||
-    (partesEmail.length === 2 &&
-      partesEmail[1].toLowerCase() === "outlook.com") ||
-    (partesEmail.length === 2 && partesEmail[1].toLowerCase() === "hotmail.com")
-  ) {
-    return true;
-  } else {
+const checkEmail = (emailValue) => {
+  const emailTrimed = emailValue.trim();
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(emailTrimed)) {
     return false;
   }
+  const partesEmail = emailTrimed.split("@");
+  if (partesEmail.length === 2) {
+    const domain = partesEmail[1].toLowerCase();
+    const allowedDomains = [
+      "gmail.com",
+      "outlook.com",
+      "hotmail.com",
+      "icloud.com",
+      "yahoo.com",
+    ];
+    return true;
+  }
+  return false;
 };
 /* --------------------------------------------------------------------- */
 
 /* ---------- FUNÇÃO PARA VERIFICAR IGUALDADE DAS SENHAS --------------- */
 function checkPasswordMatch() {
-  return senha.value === confirmarSenha.value ? true : false;
+  return senha.value === confirmarSenha.value;
 }
 /* --------------------------------------------------------------------- */
 
 /* ----------- FUNÇÃO PARA INSERIR MASCARA NO TELEFONE ----------------- */
 
 function maskPhoneNumber(event) {
-  let celular = event.target.value;
+  let celularValue = event.target.value;
 
-  if (/[A-Za-zÀ-ÿ]/.test(celular)) {
+  if (/[A-Za-zÀ-ÿ]/.test(celularValue)) {
     createDisplayMsgError("O celular deve conter apenas números!");
   } else {
     createDisplayMsgError("");
@@ -125,7 +130,6 @@ async function fetchDatas(event) {
       "O email digitado não é válido ou não é de um domínio permitido!"
     );
     email.focus();
-
     return;
   }
 
@@ -151,36 +155,11 @@ async function fetchDatas(event) {
   }
 
   const formData = {
-    // `username`: Representa o nome de usuário inserido pelo usuário.
-    // `.trim()` é usado para remover quaisquer espaços em brancos extras
-    // do início ou do fim da string do nome de usuário
     username: nome.value.trim(),
-
-    // `email`: Armazena o endereço de e-mail fornecido.
-    // `.trim()` também é aplicado aqui para limpar espaços em branco
-    // desnecessário, garantindo que o e-mail seja processado corretamente.
     email: email.value.trim(),
-
-    // `password`: Contém a senha digitada pelo usuário.
-    // Importante: a senha não deve ser "trimmed" (não se deve usar .trim())
-    // porque espaços no início ou no fim podem ser intencionais e parte da senha escolhida.
     password: senha.value,
-
-    // `celular`: Guarda o número de celular do usuário.
-    // `celularLimpo` é uma variável que (presumivelmente) já contém o número
-    // de celular fromatado apenas com dígitos, sem máscaras ou caracteres especiais.
-    // É importante enviar apenas os números para facilitar o processamento no backend.
     celular: celularLimpo,
-
-    // `cpf`: Contém o número do Cadastro de Pessoas Físicas (CPF).
-    // `replace(/\D/g, "")` é usado para remover todos os caracteres
-    // que não são dígitos (como pontos e hífens, comuns em máscaras de CPF),
-    // garantindo que apenas os números do CPFsejam enviados.
     cpf: cpf.value.replace(/\D/g, ""),
-
-    // `rg`: Armazena o número do Registro Geral (RG) ou documento de identidade.
-    // Similar ao CPF, `.replace(/\D/g, "")` remove quaisquer caracteres
-    // não numéricos, assegurando que apenas os dígitos do RG sejam transmitidos.
     rg: rg.value.replace(/\D/g, ""),
   };
 
